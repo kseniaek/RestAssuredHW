@@ -15,7 +15,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 public class PetstoreSwagger {
     RequestSpecification requestSpecification = new RequestSpecBuilder()
-            .setBaseUri("https://petstore.swagger.io/") //тогда url можно убрать из запросов
+            .setBaseUri("https://petstore.swagger.io/v2/") //тогда url можно убрать из запросов
             .setAccept(ContentType.JSON)
             .setContentType(ContentType.JSON)
             .build();
@@ -32,8 +32,8 @@ public class PetstoreSwagger {
             .build();
 
 
-    public static final String createUser = "/v2/user";
-    public static final String getUserByName = "/v2/user/{username}";
+    public static final String createUser = "/user";
+    public static final String getUserByName = "/user/{username}";
 
 
     @Test
@@ -42,7 +42,14 @@ public class PetstoreSwagger {
                 .spec(requestSpecification)
                 .get(PetstoreSwagger.getUserByName, "string")//передаем код
                 .then()
+                .body("id", equalTo(9013685127327350923L))
+                .body("username", equalTo("string"))
+                .body("firstName", equalTo("string"))
+                .body("lastName", equalTo("string"))
+                .body("email", equalTo("string"))
+                .body("password", equalTo("string"))
                 .body("phone", equalTo("string"))
+                .body("userStatus", equalTo(0))
                 .spec(responseSpecSuccess);
 
     }
@@ -63,18 +70,19 @@ public class PetstoreSwagger {
     @Test
     void testCreateUserSuccess() {
         given()
-                .queryParam("id", "123")
-                .queryParam("username", "value1")
-                .queryParam("firstName", "value1")
-                .queryParam("lastName", "value1")
-                .queryParam("email", "value1")
-                .queryParam("password", "value1")
-                .queryParam("phone", "value1")
+                .queryParam("id", "1235321")
+                .queryParam("username", "examplename1")
+                .queryParam("firstName", "examplename1")
+                .queryParam("lastName", "examplename1")
+                .queryParam("email", "examplemail1")
+                .queryParam("password", "examplepassword1")
+                .queryParam("phone", "examplephone1")
                 .queryParam("userStatus", "0")
                 .spec(requestSpecification)
                 .when()
                 .post(PetstoreSwagger.createUser)
                 .then()
+                .body("message", equalTo("1235321"))
                 .spec(responseSpecSuccess);
 
     }*/
@@ -82,7 +90,6 @@ public class PetstoreSwagger {
     @Test
     void testCreateUserFail() {
         given()
-                .queryParam("id", "123")
                 .spec(requestSpecification)
                 .when()
                 .post(PetstoreSwagger.createUser)
